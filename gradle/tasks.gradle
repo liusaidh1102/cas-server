@@ -5,6 +5,7 @@ import org.gradle.internal.logging.text.*
 
 import groovy.json.*
 import groovy.time.*
+import groovy.sql.Sql
 
 import java.nio.file.*
 import java.util.*
@@ -379,6 +380,14 @@ task duct(group: "CAS", description: "Test ticket registry functionality via the
     def service = project.findProperty("duct.service") ?: "https://apereo.github.io"
     def casServerNodes = providers.gradlePropertiesPrefixedBy("duct.cas").get()
     def username = project.findProperty("duct.username") ?: "casuser"
+    
+    // 连接数据库，查询用户
+    def dbUrl = project.findProperty("duct.db.url") ?: "jdbc:mysql://localhost:3306/cas_db"
+    def dbUsername = project.findProperty("duct.db.username") ?: "root"
+    def dbPassword = project.findProperty("duct.db.password") ?: "123456"
+    def dbQuery = project.findProperty("duct.db.query") ?: "SELECT pwd FROM user WHERE name = ?"
+    def dbDriverClass = project.findProperty("duct.db.driver") ?: "com.mysql.cj.jdbc.Driver"
+    
     def password = project.findProperty("duct.password") ?: "Mellon"
     def debug = Boolean.parseBoolean(project.findProperty("duct.debug") ?: "false")
     def duration = Long.parseLong(project.findProperty("duct.duration") ?: "-1")
@@ -386,6 +395,74 @@ task duct(group: "CAS", description: "Test ticket registry functionality via the
 
     doLast {
         def out = services.get(StyledTextOutputFactory).create("cas")
+        
+        out.withStyle(Style.Info).println("========================================")
+        out.withStyle(Style.Info).println("Starting duct task execution...")
+        out.withStyle(Style.Info).println("Username: ${username}")
+        out.withStyle(Style.Info).println("Database URL: ${dbUrl}")
+        out.withStyle(Style.Info).println("Database Username: ${dbUsername}")
+        out.withStyle(Style.Info).println("Database Query: ${dbQuery}")
+        out.withStyle(Style.Info).println("========================================")
+        
+        // 查询数据库
+        def queriedPassword = null
+        try {
+            out.withStyle(Style.Info).println("[1/5] Loading JDBC driver: ${dbDriverClass}...")
+            Class.forName(dbDriverClass)
+            out.withStyle(Style.Success).println("[1/5] JDBC driver loaded successfully")
+            
+            out.withStyle(Style.Info).println("[2/5] Connecting to database...")
+            def sql = Sql.newInstance(dbUrl, dbUsername, dbPassword, dbDriverClass)
+            out.withStyle(Style.Success).println("[2/5] Database connection established")
+            
+            out.withStyle(Style.Info).println("[3/5] Executing query with username: ${username}")
+            def rowCount = 0
+            sql.eachRow(dbQuery, [username]) { row ->
+                rowCount++
+                queriedPassword = row.password
+                out.withStyle(Style.Info).println("[3/5] Found row ${rowCount}, password retrieved (length: ${queriedPassword?.length() ?: 0})")
+            }
+            out.withStyle(Style.Success).println("[3/5] Query executed, found ${rowCount} row(s)")
+            
+            out.withStyle(Style.Info).println("[4/5] Closing database connection...")
+            sql.close()
+            out.withStyle(Style.Success).println("[4/5] Database connection closed")
+            
+            out.withStyle(Style.Info).println("[5/5] Processing query result...")
+            if (queriedPassword != null) {
+                password = queriedPassword
+                out.withStyle(Style.Success).println("[5/5] Password successfully retrieved from database for user: ${username}")
+                out.withStyle(Style.Success).println("Using database password for authentication")
+            } else {
+                out.withStyle(Style.Info).println("[5/5] No password found in database for user: ${username}")
+                out.withStyle(Style.Info).println("Using default/configured password: ${password}")
+            }
+        } catch (ClassNotFoundException e) {
+            out.withStyle(Style.Failure).println("[ERROR] JDBC driver not found: ${e.message}")
+            out.withStyle(Style.Info).println("Using default/configured password")
+            if (debug) {
+                e.printStackTrace()
+            }
+        } catch (java.sql.SQLException e) {
+            out.withStyle(Style.Failure).println("[ERROR] Database SQL error: ${e.message}")
+            out.withStyle(Style.Failure).println("SQL State: ${e.getSQLState()}")
+            out.withStyle(Style.Failure).println("Error Code: ${e.getErrorCode()}")
+            out.withStyle(Style.Info).println("Using default/configured password")
+            if (debug) {
+                e.printStackTrace()
+            }
+        } catch (Exception e) {
+            out.withStyle(Style.Failure).println("[ERROR] Unexpected error querying database: ${e.class.name}")
+            out.withStyle(Style.Failure).println("Message: ${e.message}")
+            out.withStyle(Style.Info).println("Using default/configured password")
+            if (debug) {
+                e.printStackTrace()
+            }
+        }
+        
+        out.withStyle(Style.Info).println("========================================")
+        out.withStyle(Style.Info).println("Starting CAS REST API tests...")
+        out.withStyle(Style.Info).println("========================================")
 
         def getCasServerNode = {
             def casServerNodesArray = casServerNodes.values().toArray()

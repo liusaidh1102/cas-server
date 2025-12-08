@@ -146,6 +146,12 @@ java {
     }
 }
 
+dependencies {
+    implementation "org.apereo.cas:cas-server-support-jdbc:${project.'cas.version'}"
+    implementation "org.apereo.cas:cas-server-support-jdbc-authentication:${project.'cas.version'}"
+    implementation "com.mysql:mysql-connector-j:8.4.0"
+}
+
 bootBuildImage {
     imageName = "${project.'containerImageOrg'}/${project.'containerImageName'}:${project.version}"
 }
@@ -153,10 +159,10 @@ bootBuildImage {
 
 ['jibDockerBuild', 'jibBuildTar', 'jib'].each { taskName ->
     if (gradle.gradleVersion >= "8.0") {
-        getTasksByName(taskName, true).each(it -> {
+        getTasksByName(taskName, true).each { it ->
             it.notCompatibleWithConfigurationCache("Jib is not compatible with configuration cache");
             it.enabled = !gradle.startParameter.isConfigurationCacheRequested()
-        })
+        }
     }
 }
 
@@ -297,6 +303,9 @@ dependencies {
      * plugin via the CAS bom.
      **/
     implementation "org.apereo.cas:cas-server-support-rest"
+    implementation "org.apereo.cas:cas-server-core-authentication"
+    // 引入mysql依赖包
+    implementation "mysql:mysql-connector-java:8.0.23"
 
 
     

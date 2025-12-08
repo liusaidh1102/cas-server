@@ -43,6 +43,10 @@ dependencies {
 
     bootRunConfig "org.springframework.cloud:spring-cloud-starter-bootstrap"
     bootRunConfig "org.springframework.boot:spring-boot-devtools"
+
+    bootRunConfig "org.apereo.cas:cas-server-support-jdbc"
+    bootRunConfig "org.apereo.cas:cas-server-support-jdbc-authentication"
+    bootRunConfig "com.mysql:mysql-connector-j:8.4.0"
 }
 
 bootRun {
