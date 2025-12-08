@@ -1,3 +1,64 @@
-# Application properties that need to be
-# embedded within the web application can be included here
 
+cas:
+  # Webflow 加密设置
+  webflow:
+    crypto:
+      signing:
+        key: RqO5Qu53nhcUmAlr7ZUEngRqO5Qu53nhcUmAlr7ZUEngRqO5Qu53nhcUmAlr7ZUEng
+      encryption:
+        key: RqO5Qu53nhcUmAlr7ZUEng
+  
+  # 国际化和区域设置
+  locale:
+    default-value: zh_CN
+    param-name: locale
+  
+  message-bundle:
+    encoding: UTF-8
+    fallback-system-locale: false
+    use-code-message: true
+
+  authn:
+    # 禁用默认的静态认证
+    accept:
+      enabled: false
+
+    # 启用 JDBC 认证
+    jdbc:
+      query[0]:
+        # 数据库连接设置
+        url: jdbc:mysql://localhost:3306/cas_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        user: root
+        password: 123456
+        driver-class: com.mysql.cj.jdbc.Driver
+            
+        # SQL 查询语句，用于认证用户
+        # 必须返回一个名为 'password' 的列
+        sql: SELECT password FROM user WHERE name=?
+            
+        # 密码字段名称（默认：password）
+        field-password: password
+            
+        # 密码编码方式（如果数据库中的密码已加密）
+        # 使用 BCRYPT 加密
+        # https://bcrypt-generator.com/    hash生成网址
+        password-encoder:
+          type: BCRYPT
+          strength: 12
+
+        # 连接池设置
+        pool:
+          suspension: false
+          min-size: 6
+          max-size: 18
+          max-wait: 2000
+          timeout: 5000
+
+        # 数据库方言
+        dialect: org.hibernate.dialect.MySQLDialect
+
+logging:
+  level:
+    org.apereo.cas: DEBUG
+    org.apereo.cas.authentication: DEBUG
+    org.apereo.cas.jdbc: DEBUG
