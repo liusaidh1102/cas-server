@@ -1,5 +1,16 @@
-
 cas:
+  server:
+    # CAS 自己的外部访问地址（你说 CAS 跑在 8443）
+    name: https://localhost:8443
+    prefix: ${cas.server.name}/cas
+
+  service-registry:
+    core:
+      init-from-json: true
+    json:
+      # 指向本地服务注册目录，匹配 etc/cas/services 下的定义
+      location: file:/d:/idea-workspaces/cas-server/etc/cas/services
+
   # Webflow 加密设置
   webflow:
     crypto:
@@ -7,6 +18,14 @@ cas:
         key: RqO5Qu53nhcUmAlr7ZUEngRqO5Qu53nhcUmAlr7ZUEngRqO5Qu53nhcUmAlr7ZUEng
       encryption:
         key: RqO5Qu53nhcUmAlr7ZUEng
+  
+  tgc:
+    crypto:
+      signing:
+        key: RX3vWypbgZpVWxfgFxi7laDjdwKr55nCjy80WkiVIex4Rhv7Hfu__yi92vuqlFRUKcaoUjoM7JVXXPE9HcOnsA
+      encryption:
+        # 16 字节对称密钥，纯 ASCII，避免启动时报错
+        key: nIoqizY2BHhXIjNi
   
   # 国际化和区域设置
   locale:

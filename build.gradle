@@ -307,6 +307,9 @@ dependencies {
     // 引入mysql依赖包
     implementation "mysql:mysql-connector-java:8.0.23"
 
+    // 引入 JSON 服务注册
+    implementation "org.apereo.cas:cas-server-support-json-service-registry"
+
 
     
     testImplementation "org.springframework.boot:spring-boot-starter-test"

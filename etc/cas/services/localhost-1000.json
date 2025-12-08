@@ -1,0 +1,17 @@
+{
+  "@class" : "org.apereo.cas.services.RegexRegisteredService",
+  "id" : 1000,
+  "name" : "Localhost 1000 Service",
+  "description" : "Service for localhost:1000",
+  "serviceId" : "^http://localhost:1000/login(/.*)?$",
+  "evaluationOrder" : 1,
+  "accessStrategy" : {
+    "@class" : "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",
+    "enabled" : true,
+    "ssoEnabled" : true
+  },
+  "theme": "cas-theme-default"
+}
+
+
+
