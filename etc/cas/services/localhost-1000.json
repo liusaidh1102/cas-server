@@ -1,9 +1,9 @@
 {
-  "@class" : "org.apereo.cas.services.RegexRegisteredService",
+  "@class" : "org.apereo.cas.services.CasRegisteredService",
   "id" : 1000,
   "name" : "Localhost 1000 Service",
   "description" : "Service for localhost:1000",
-  "serviceId" : "^http://localhost:1000/login(/.*)?$",
+  "serviceId" : "^https?://(localhost|127\\.0\\.0\\.1):1000(/.*)?$",
   "evaluationOrder" : 1,
   "accessStrategy" : {
     "@class" : "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",

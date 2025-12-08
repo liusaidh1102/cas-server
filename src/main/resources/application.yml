@@ -1,6 +1,6 @@
 cas:
   server:
-    # CAS 自己的外部访问地址（你说 CAS 跑在 8443）
+    # CAS 自己的外部访问地址（ CAS 跑在 8443）
     name: https://localhost:8443
     prefix: ${cas.server.name}/cas
 
@@ -75,6 +75,17 @@ cas:
 
         # 数据库方言
         dialect: org.hibernate.dialect.MySQLDialect
+
+# Spring Boot 内置 Tomcat 的证书路径；默认找 /etc/cas/thekeystore，这里改到本地
+server:
+  # 明确监听 HTTPS 端口
+  port: 8443
+  ssl:
+    enabled: true
+    # 使用显式 file:// URL 避免路径解析问题
+    key-store: file:/d:/idea-workspaces/cas-server/etc/cas/thekeystore
+    key-store-password: changeit
+    key-store-type: PKCS12
 
 logging:
   level:

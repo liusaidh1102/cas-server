@@ -1,0 +1,18 @@
+{
+    "@class" : "org.apereo.cas.services.CasRegisteredService",
+    "id" : 1001,
+    "name" : "Localhost 1000 Service",
+    "description" : "Service for localhost:1001",
+    "serviceId" : "^https?://(localhost|127\\.0\\.0\\.1):1001(/.*)?$",
+    "evaluationOrder" : 1,
+    "accessStrategy" : {
+      "@class" : "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",
+      "enabled" : true,
+      "ssoEnabled" : true
+    },
+    "theme": "cas-theme-default"
+  }
+  
+  
+  
+  
