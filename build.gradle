@@ -305,7 +305,7 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-rest"
     implementation "org.apereo.cas:cas-server-core-authentication"
     // 引入mysql依赖包
-    implementation "mysql:mysql-connector-java:8.0.23"
+    implementation "mysql:mysql-connector-java:8.0.33"
 
     // 引入 JSON 服务注册
     implementation "org.apereo.cas:cas-server-support-json-service-registry"
