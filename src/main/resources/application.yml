@@ -41,6 +41,11 @@ cas:
     # 禁用默认的静态认证
     accept:
       enabled: false
+  
+  # 密码管理
+    pm:
+      core:
+        enabled: true
 
     # 启用 JDBC 认证
     jdbc:

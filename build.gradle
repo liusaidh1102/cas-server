@@ -310,6 +310,9 @@ dependencies {
     // 引入 JSON 服务注册
     implementation "org.apereo.cas:cas-server-support-json-service-registry"
 
+    // 引入密码管理模块依赖
+    implementation "org.apereo.cas:cas-server-support-pm-webflow:${project.'cas.version'}"
+
 
     
     testImplementation "org.springframework.boot:spring-boot-starter-test"
