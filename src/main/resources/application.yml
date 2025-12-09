@@ -84,7 +84,7 @@ cas:
 # Spring Boot 内置 Tomcat 的证书路径；默认找 /etc/cas/thekeystore，这里改到本地
 server:
   # 明确监听 HTTPS 端口
-  port: 8443
+  port: 8080
   ssl:
     enabled: true
     # 使用显式 file:// URL 避免路径解析问题
