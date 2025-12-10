@@ -58,7 +58,7 @@ cas:
             
         # SQL 查询语句，用于认证用户
         # 必须返回一个名为 'password' 的列
-        sql: SELECT password FROM user WHERE name=?
+        sql: SELECT password FROM user WHERE username=?
             
         # 密码字段名称（默认：password）
         field-password: password
